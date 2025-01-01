@@ -22,6 +22,7 @@ from utils.channel import (
 )
 from utils.config import config
 from utils.tools import (
+    convert_to_m3u_toipv4,
     update_file,
     get_pbar_remaining,
     get_ip_address,
@@ -170,6 +171,7 @@ class UpdateSource:
                     ) as file:
                         pickle.dump(channel_data_cache, file)
                 convert_to_m3u()
+                convert_to_m3u_toipv4()
                 print(
                     f"🥳 Update completed! Total time spent: {format_interval(time() - main_start_time)}. Please check the {user_final_file} file!"
                 )
