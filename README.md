@@ -107,6 +107,12 @@
 - ✨ 更多功能请见[配置参数](#配置)
 
 ## 最新结果
+- 自用内网源:
+
+```bash
+https://cdn.jsdelivr.net/gh/Zcodeoooo/iptv-api/output/result_to_ipv4.m3u
+```
+
 
 - 接口源：
 
