@@ -3,7 +3,7 @@ import sys
 
 sys.path.append(os.path.dirname(sys.path[0]))
 from flask import Flask, send_from_directory, make_response
-from utils.tools import get_result_file_content, get_ip_address, resource_path
+from utils.tools import get_result_file_content, get_ip_address, get_result_file_content_to_ipv4, resource_path
 from utils.config import config
 import utils.constants as constants
 
@@ -30,6 +30,9 @@ def show_txt():
 def show_m3u():
     return get_result_file_content(file_type="m3u")
 
+@app.route("/m3u_ipv6_to_ipv4")
+def show_m3u_ipv6_to_ipv4():
+    return get_result_file_content_to_ipv4(file_type="m3u")
 
 @app.route("/content")
 def show_content():
