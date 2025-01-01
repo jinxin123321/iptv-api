@@ -385,6 +385,43 @@ def convert_to_m3u():
             print(f"✅ M3U result file generated at: {m3u_file_path}")
 
 
+def convert_to_m3u_toipv4():
+    """
+    Convert result txt to m3u format
+    """
+    user_final_file = resource_path(config.final_file)
+    if os.path.exists(user_final_file):
+        with open(user_final_file, "r", encoding="utf-8") as file:
+            m3u_output = '#EXTM3U x-tvg-url="https://live.fanmingming.cn/e.xml"\n'
+            current_group = None
+            for line in file:
+                trimmed_line = line.strip()
+                if trimmed_line != "":
+                    if "#genre#" in trimmed_line:
+                        current_group = trimmed_line.replace(",#genre#", "").strip()
+                    else:
+                        try:
+                            original_channel_name, _, channel_link = map(
+                                str.strip, trimmed_line.partition(",")
+                            )
+                        except:
+                            continue
+                        processed_channel_name = re.sub(
+                            r"(CCTV|CETV)-(\d+)(\+.*)?",
+                            lambda m: f"{m.group(1)}{m.group(2)}"
+                                      + ("+" if m.group(3) else ""),
+                            original_channel_name,
+                        )
+                        m3u_output += f'#EXTINF:-1 tvg-name="{processed_channel_name}" tvg-logo="https://live.fanmingming.cn/tv/{processed_channel_name}.png"'
+                        if current_group:
+                            m3u_output += f' group-title="{current_group}"'
+                        m3u_output += f",{original_channel_name}\n{"http://10.0.0.1:2025/"+channel_link}\n"
+            m3u_file_path = os.path.splitext(user_final_file)[0] + "_to_ipv4" + ".m3u"
+            with open(m3u_file_path, "w", encoding="utf-8") as m3u_file:
+                m3u_file.write(m3u_output)
+            print(f"✅ M3U result file generated at: {m3u_file_path}")
+
+
 def get_result_file_content(show_content=False, file_type=None):
     """
     Get the content of the result file
@@ -399,6 +436,31 @@ def get_result_file_content(show_content=False, file_type=None):
         if config.open_m3u_result:
             if file_type == "m3u" or not file_type:
                 result_file = os.path.splitext(user_final_file)[0] + ".m3u"
+            if file_type != "txt" and show_content == False:
+                return send_file(result_file, as_attachment=True)
+        with open(result_file, "r", encoding="utf-8") as file:
+            content = file.read()
+    else:
+        content = constants.waiting_tip
+    response = make_response(content)
+    response.mimetype = 'text/plain'
+    return response
+
+
+def get_result_file_content_to_ipv4(show_content=False, file_type=None):
+    """
+    Get the content of the result file
+    """
+    user_final_file = resource_path(config.final_file)
+    result_file = (
+        os.path.splitext(user_final_file)[0] + f".{file_type}"
+        if file_type
+        else user_final_file
+    )
+    if os.path.exists(result_file):
+        if config.open_m3u_result:
+            if file_type == "m3u" or not file_type:
+                result_file = os.path.splitext(user_final_file)[0] + "_to_ipv4" + ".m3u"
             if file_type != "txt" and show_content == False:
                 return send_file(result_file, as_attachment=True)
         with open(result_file, "r", encoding="utf-8") as file:
