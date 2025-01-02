@@ -149,10 +149,15 @@ https://cdn.jsdelivr.net/gh/jinxin123321/iptv-api/source.json
 
 修改步骤
 1.openwrt本地启动脚本添加nginx &命令
+
 2. 由于openwrt默认就有nginx,故上传项目中的nginx.conf到路由器ssh目录 /etc/nginx/nginx.conf即可
+3. 
 3.全局代码中的http://10.0.0.1:2025替换成你的openwrt路由器nginx地址端口即可
+
 4.参考原iptv-api项目中工作流的创建,并对config.ini进行配置
+
 4.即可使用外网地址访问内网源 https://cdn.jsdelivr.net/gh/{你的用户名}/{你的项目名}/output/result_to_ipv4.m3u
+
 
 ## 配置
 
